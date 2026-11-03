@@ -1,8 +1,17 @@
-import { CommandFactory } from 'nest-commander';
-import { AppModule } from './app.module';
-import { LogService } from './services/log.service';
+import { runCli } from './cli';
 
-async function bootstrap() {
-  await CommandFactory.run(AppModule, new LogService());
+async function main(): Promise<void> {
+  try {
+    await runCli(process.argv.slice(2));
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`ERROR: ${error.message}`);
+    } else {
+      console.error(error);
+    }
+
+    process.exitCode = 1;
+  }
 }
-bootstrap();
+
+void main();
