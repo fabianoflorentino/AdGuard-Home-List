@@ -35,7 +35,7 @@
     <canvas id="matrix" aria-hidden="true"></canvas>
     <div class="scanlines" aria-hidden="true"></div>
     <div class="ambient ambient--green" aria-hidden="true"></div>
-    <div class="ambient ambient--magenta" aria-hidden="true"></div>
+    <div class="ambient ambient--slate" aria-hidden="true"></div>
 
     <header class="site-header">
       <a class="brand" href="#top" aria-label="AdGuard Home List home">
@@ -68,7 +68,7 @@
         </h1>
         <p class="lead reveal">
           A curated <span class="text-green">allowlist</span> and
-          <span class="text-magenta">blocklist</span> for AdGuard Home. Built to
+          <span class="text-slate">blocklist</span> for AdGuard Home. Built to
           keep legitimate services, CDNs and payment providers working — while
           ads, trackers and malicious domains hit the void.
         </p>
@@ -347,7 +347,7 @@ cd AdGuard-Home-List
 <span class="c-green"># publish on every push to main</span>
 git push origin main
 
-<span class="c-magenta"># your URLs</span>
+<span class="c-slate"># your URLs</span>
 https://raw.githubusercontent.com/&lt;you&gt;/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt
 https://raw.githubusercontent.com/&lt;you&gt;/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt</code></pre>
           </div>
@@ -401,6 +401,19 @@ https://raw.githubusercontent.com/&lt;you&gt;/AdGuard-Home-List/gh-pages/AdGuard
         AdGuard.
       </p>
     </footer>
+
+    <button
+      class="to-top"
+      id="to-top"
+      type="button"
+      aria-label="Back to top"
+      title="Back to top"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 19V5" />
+        <path d="M5 12l7-7 7 7" />
+      </svg>
+    </button>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

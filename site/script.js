@@ -37,7 +37,7 @@
       }
       lastFrame = time;
 
-      ctx.fillStyle = "rgba(5, 7, 10, 0.09)";
+      ctx.fillStyle = "rgba(4, 7, 6, 0.09)";
       ctx.fillRect(0, 0, width, height);
       ctx.font = `${fontSize}px "Share Tech Mono", monospace`;
 
@@ -47,11 +47,11 @@
         const y = drops[i] * fontSize;
 
         ctx.fillStyle =
-          Math.random() > 0.985
-            ? "rgba(255, 43, 214, 0.85)"
-            : Math.random() > 0.9
-              ? "rgba(0, 229, 255, 0.8)"
-              : "rgba(0, 255, 156, 0.75)";
+          Math.random() > 0.99
+            ? "rgba(210, 255, 235, 0.85)"
+            : Math.random() > 0.92
+              ? "rgba(138, 157, 151, 0.6)"
+              : "rgba(57, 255, 154, 0.7)";
 
         ctx.fillText(char, x, y);
 
@@ -226,6 +226,48 @@
     );
 
     revealItems.forEach((item) => observer.observe(item));
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Fixed header height (keeps content offset in sync)
+   * ---------------------------------------------------------------- */
+  const header = document.querySelector(".site-header");
+
+  if (header) {
+    const setHeaderHeight = () => {
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${header.offsetHeight}px`,
+      );
+    };
+
+    setHeaderHeight();
+    window.addEventListener("resize", setHeaderHeight);
+
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(setHeaderHeight).observe(header);
+    }
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Back to top
+   * ---------------------------------------------------------------- */
+  const toTop = document.getElementById("to-top");
+
+  if (toTop) {
+    const updateToTop = () => {
+      toTop.classList.toggle("is-visible", window.scrollY > 480);
+    };
+
+    updateToTop();
+    window.addEventListener("scroll", updateToTop, { passive: true });
+
+    toTop.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+    });
   }
 
   /* ---------------------------------------------------------------- *
