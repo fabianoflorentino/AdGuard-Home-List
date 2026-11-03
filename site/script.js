@@ -8,7 +8,9 @@
    * ---------------------------------------------------------------- */
   const canvas = document.getElementById("matrix");
 
-  if (canvas && !reduceMotion.matches) {
+  const saveData = navigator.connection?.saveData === true;
+
+  if (canvas && !reduceMotion.matches && !saveData) {
     const ctx = canvas.getContext("2d");
     const glyphs =
       "アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>/\\|=+*#$%&@";
@@ -20,6 +22,8 @@
     let columns = 0;
     let drops = [];
     let lastFrame = 0;
+    let animationFrame = 0;
+    let running = false;
 
     const resize = () => {
       width = canvas.width = window.innerWidth;
@@ -32,7 +36,6 @@
 
     const draw = (time) => {
       if (time - lastFrame < frameMs) {
-        requestAnimationFrame(draw);
         return;
       }
       lastFrame = time;
@@ -61,8 +64,29 @@
           drops[i] += 1;
         }
       }
+    };
 
-      requestAnimationFrame(draw);
+    const loop = (time) => {
+      if (!running) {
+        return;
+      }
+
+      draw(time);
+      animationFrame = requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (running) {
+        return;
+      }
+
+      running = true;
+      animationFrame = requestAnimationFrame(loop);
+    };
+
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(animationFrame);
     };
 
     let resizeTimer;
@@ -71,8 +95,16 @@
       resizeTimer = window.setTimeout(resize, 150);
     });
 
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    });
+
     resize();
-    requestAnimationFrame(draw);
+    start();
   }
 
   /* ---------------------------------------------------------------- *

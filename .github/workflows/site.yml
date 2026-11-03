@@ -1,0 +1,39 @@
+name: Deploy site
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "site/**"
+      - ".github/workflows/site.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build site folder
+        run: |
+          mkdir -p public
+          cp -R ./site/. ./public/
+          cp ./LICENSE.txt ./public/LICENSE.txt
+          touch ./public/.nojekyll
+
+      - name: Deploy site without deleting the generated lists
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          folder: public
+          clean: false
+          commit-message: "deploy: update website"
