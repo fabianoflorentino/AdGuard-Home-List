@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" role="img" aria-label="AdGuard Home List setup flow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#040706" />
+      <stop offset="1" stop-color="#0a1411" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#39ff9a" stroke-opacity="0.08" />
+    </pattern>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.4" result="b" />
+      <feMerge>
+        <feMergeNode in="b" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <style>
+      .title { font: 700 15px "Share Tech Mono", Consolas, monospace; letter-spacing: 3px; fill: #8aa39a; }
+      .num { font: 700 14px "Share Tech Mono", Consolas, monospace; fill: #39ff9a; letter-spacing: 2px; }
+      .step { font: 700 17px "Share Tech Mono", Consolas, monospace; fill: #e9fff6; letter-spacing: 1px; }
+      .desc { font: 13px "Share Tech Mono", Consolas, monospace; fill: #7b918a; }
+      .box { fill: #07100d; stroke: #39ff9a; stroke-opacity: 0.28; }
+      .box-accent { fill: none; stroke: #39ff9a; stroke-opacity: 0.5; }
+      .arrow { stroke: #39ff9a; stroke-opacity: 0.55; stroke-width: 2; fill: none; }
+      .arrow-head { fill: #39ff9a; fill-opacity: 0.7; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="280" fill="url(#bg)" />
+  <rect width="1200" height="280" fill="url(#grid)" />
+  <text x="40" y="42" class="title">HOW IT WORKS · 4 STEPS</text>
+
+  <g transform="translate(40, 74)">
+    <rect class="box" width="250" height="160" rx="2" />
+    <rect class="box-accent" x="8" y="8" width="234" height="144" rx="1" />
+    <text x="22" y="36" class="num">01 // COPY</text>
+    <text x="22" y="74" class="step">Pick your list</text>
+    <text x="22" y="102" class="desc">AllowList (recommended)</text>
+    <text x="22" y="122" class="desc">or optional BlockList</text>
+    <text x="22" y="146" class="desc">from the website.</text>
+  </g>
+
+  <g transform="translate(330, 74)">
+    <rect class="box" width="250" height="160" rx="2" />
+    <rect class="box-accent" x="8" y="8" width="234" height="144" rx="1" />
+    <text x="22" y="36" class="num">02 // OPEN</text>
+    <text x="22" y="74" class="step">AdGuard Home</text>
+    <text x="22" y="102" class="desc">Filters →</text>
+    <text x="22" y="122" class="desc">DNS allowlists</text>
+    <text x="22" y="146" class="desc">→ Add allowlist.</text>
+  </g>
+
+  <g transform="translate(620, 74)">
+    <rect class="box" width="250" height="160" rx="2" />
+    <rect class="box-accent" x="8" y="8" width="234" height="144" rx="1" />
+    <text x="22" y="36" class="num">03 // PASTE</text>
+    <text x="22" y="74" class="step">Add the URL</text>
+    <text x="22" y="102" class="desc">Name: AdGuard Home List</text>
+    <text x="22" y="122" class="desc">Paste the raw URL</text>
+    <text x="22" y="146" class="desc">and save.</text>
+  </g>
+
+  <g transform="translate(910, 74)">
+    <rect class="box" width="250" height="160" rx="2" />
+    <rect class="box-accent" x="8" y="8" width="234" height="144" rx="1" />
+    <text x="22" y="36" class="num">04 // REFRESH</text>
+    <text x="22" y="74" class="step">Hands off</text>
+    <text x="22" y="102" class="desc">AdGuard Home updates</text>
+    <text x="22" y="122" class="desc">the list automatically.</text>
+    <text x="22" y="146" class="desc">Rebuilt daily 04:00 UTC.</text>
+  </g>
+
+  <g class="arrow" filter="url(#glow)">
+    <path d="M296 154 H318" />
+    <path d="M586 154 H608" />
+    <path d="M876 154 H898" />
+  </g>
+  <g class="arrow-head">
+    <path d="M318 148 L328 154 L318 160 Z" />
+    <path d="M608 148 L618 154 L608 160 Z" />
+    <path d="M898 148 L908 154 L898 160 Z" />
+  </g>
+</svg>
