@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AdGuard Home List — Open Source Allowlist &amp; Blocklist</title>
+    <meta
+      name="description"
+      content="Open source, daily-updated allowlist and blocklist for AdGuard Home. Keep legitimate services working while blocking ads, trackers and malicious domains."
+    />
+    <meta name="theme-color" content="#05070a" />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <meta property="og:title" content="AdGuard Home List" />
+    <meta
+      property="og:description"
+      content="Open source allowlist and blocklist for AdGuard Home, rebuilt every day."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://fabianoflorentino.github.io/AdGuard-Home-List/"
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="matrix" aria-hidden="true"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="ambient ambient--green" aria-hidden="true"></div>
+    <div class="ambient ambient--magenta" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="AdGuard Home List home">
+        <span class="brand-prefix">//</span> ADGUARD_HOME_LIST<span
+          class="cursor"
+          aria-hidden="true"
+          >_</span
+        >
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="#quickstart">Quickstart</a>
+        <a href="#features">Features</a>
+        <a href="#inside">Inside</a>
+        <a href="#deploy">Deploy</a>
+        <a
+          class="nav-github"
+          href="https://github.com/fabianoflorentino/AdGuard-Home-List"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub ↗</a
+        >
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow reveal">OPEN SOURCE DNS FILTERING</p>
+        <h1 class="glitch reveal" data-text="ADGUARD HOME LIST">
+          ADGUARD HOME LIST
+        </h1>
+        <p class="lead reveal">
+          A curated <span class="text-green">allowlist</span> and
+          <span class="text-magenta">blocklist</span> for AdGuard Home. Built to
+          keep legitimate services, CDNs and payment providers working — while
+          ads, trackers and malicious domains hit the void.
+        </p>
+
+        <div class="hero-actions reveal">
+          <a class="btn btn--primary" href="#quickstart">Get the lists</a>
+          <a
+            class="btn btn--ghost"
+            href="https://github.com/fabianoflorentino/AdGuard-Home-List"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Star on GitHub</a
+          >
+        </div>
+
+        <div class="stats reveal" aria-label="Project statistics">
+          <div class="stat">
+            <span class="stat-value" data-list="allow">—</span>
+            <span class="stat-label">Allow rules</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" data-list="block">—</span>
+            <span class="stat-label">Block rules</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">24h</span>
+            <span class="stat-label">Auto refresh</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">GPL-3.0</span>
+            <span class="stat-label">Open source</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="quickstart">
+        <div class="section-head reveal">
+          <span class="tag">01 // QUICKSTART</span>
+          <h2>Plug into AdGuard Home</h2>
+          <p>
+            Copy a URL below and paste it into AdGuard Home. The lists are
+            rebuilt every day at 04:00 UTC and served straight from GitHub Pages.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card card--allow reveal">
+            <div class="card-head">
+              <h3>AllowList</h3>
+              <span class="pill pill--allow">recommended</span>
+            </div>
+            <p>
+              Whitelist legitimate domains, CDNs, payment providers, streaming
+              and game platforms so normal browsing never breaks.
+            </p>
+            <div class="url-row">
+              <code
+                >https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt</code
+              >
+              <button
+                class="copy"
+                type="button"
+                data-copy="https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt"
+              >
+                Copy
+              </button>
+            </div>
+          </article>
+
+          <article class="card card--block reveal">
+            <div class="card-head">
+              <h3>BlockList</h3>
+              <span class="pill pill--block">optional</span>
+            </div>
+            <p>
+              Ads, trackers, telemetry, phishing and typo-squatting domains,
+              consolidated from trusted community sources.
+            </p>
+            <div class="url-row">
+              <code
+                >https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt</code
+              >
+              <button
+                class="copy"
+                type="button"
+                data-copy="https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt"
+              >
+                Copy
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <ol class="steps reveal">
+          <li>
+            <span>Open</span> AdGuard Home → <strong>Filters</strong> →
+            <strong>DNS allowlists</strong>.
+          </li>
+          <li><span>Paste</span> the URL and hit save.</li>
+          <li>
+            <span>Done</span> — AdGuard Home refreshes the list on its own.
+          </li>
+        </ol>
+      </section>
+
+      <section class="section" id="features">
+        <div class="section-head reveal">
+          <span class="tag">02 // FEATURES</span>
+          <h2>Built for real networks</h2>
+          <p>
+            No accounts, no telemetry, no proprietary magic. Just plain text
+            lists, generated in the open.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" />
+            </svg>
+            <h3>Allowlist first</h3>
+            <p>
+              Carefully curated exceptions for services, OS updates, clouds and
+              payment flows.
+            </p>
+          </article>
+
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11a8 8 0 10-2.3 5.7" />
+              <path d="M20 4v7h-7" />
+            </svg>
+            <h3>Refreshed daily</h3>
+            <p>
+              A scheduled workflow rebuilds, cleans and publishes both lists
+              every day at 04:00 UTC.
+            </p>
+          </article>
+
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l9 5-9 5-9-5 9-5z" />
+              <path d="M3 12l9 5 9-5" />
+              <path d="M3 16l9 5 9-5" />
+            </svg>
+            <h3>De-duplicated</h3>
+            <p>
+              Multiple upstream sources are merged into a single normalized
+              AdGuard syntax list.
+            </p>
+          </article>
+
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 9l-4 3 4 3" />
+              <path d="M16 9l4 3-4 3" />
+              <path d="M13 5l-2 14" />
+            </svg>
+            <h3>Open source</h3>
+            <p>
+              TypeScript CLI, public workflows and a static site. Read every
+              line, run your own copy.
+            </p>
+          </article>
+
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="6" cy="6" r="2.5" />
+              <circle cx="18" cy="6" r="2.5" />
+              <circle cx="12" cy="18" r="2.5" />
+              <path d="M8.5 6h7M7.2 8.2l3.6 7.6M16.8 8.2l-3.6 7.6" />
+            </svg>
+            <h3>Community driven</h3>
+            <p>
+              Rules from well-known projects like AdGuard, StevenBlack,
+              blocklistproject and more.
+            </p>
+          </article>
+
+          <article class="feature reveal">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" />
+            </svg>
+            <h3>Works everywhere</h3>
+            <p>
+              AdGuard Home, Pi-hole and any tool that understands hosts or
+              AdGuard rules.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="inside">
+        <div class="section-head reveal">
+          <span class="tag">03 // INSIDE</span>
+          <h2>What gets curated</h2>
+          <p>
+            Custom rules plus selected external sources, organized by domain of
+            life.
+          </p>
+        </div>
+
+        <div class="inside-layout">
+          <div class="terminal reveal">
+            <div class="terminal-bar">
+              <span class="dot dot--red"></span>
+              <span class="dot dot--yellow"></span>
+              <span class="dot dot--green"></span>
+              <span class="terminal-title">allowlist/custom</span>
+            </div>
+            <pre><code>allowlist/
+├── cdn/          # Akamai, Cloudflare, Fastly, jsDelivr…
+├── dns/          # Akamai DNS, No-IP
+├── government/   # Public services (.fr)
+├── services/     # Apple, GitHub, Google, Netflix, Spotify…
+├── url-shorteners.txt
+└── external/     # upstream allow lists
+blocklist/
+├── custom/       # scam, typo-squatting, service blocks
+└── external/     # ads, trackers, phishing, telemetry</code></pre>
+          </div>
+
+          <div class="chips reveal">
+            <span class="chip">CDNs</span>
+            <span class="chip">DNS</span>
+            <span class="chip">Banking &amp; payments</span>
+            <span class="chip">Cloud storage</span>
+            <span class="chip">Game platforms</span>
+            <span class="chip">Streaming</span>
+            <span class="chip">Operating system updates</span>
+            <span class="chip">Developer tools</span>
+            <span class="chip">Phishing</span>
+            <span class="chip">Telemetry</span>
+            <span class="chip">Typo-squatting</span>
+            <span class="chip">Malware</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="deploy">
+        <div class="section-head reveal">
+          <span class="tag">04 // DEPLOY</span>
+          <h2>Fork it. Own it.</h2>
+          <p>
+            Everything is open source. Fork the repository, enable GitHub Pages
+            and you have your own always-updated DNS lists.
+          </p>
+        </div>
+
+        <div class="deploy-grid">
+          <ol class="steps steps--deploy reveal">
+            <li><span>Fork</span> this repository on GitHub.</li>
+            <li>
+              <span>Enable</span> Pages → Source: branch
+              <code>gh-pages</code> / root.
+            </li>
+            <li>
+              <span>Run</span> the <strong>Publish</strong> workflow from the
+              Actions tab.
+            </li>
+            <li><span>Point</span> AdGuard Home to your own raw URLs.</li>
+          </ol>
+
+          <div class="terminal reveal">
+            <div class="terminal-bar">
+              <span class="dot dot--red"></span>
+              <span class="dot dot--yellow"></span>
+              <span class="dot dot--green"></span>
+              <span class="terminal-title">your-lists.sh</span>
+            </div>
+            <pre><code><span class="c-green"># fork + clone</span>
+git clone https://github.com/&lt;you&gt;/AdGuard-Home-List.git
+cd AdGuard-Home-List
+
+<span class="c-green"># publish on every push to main</span>
+git push origin main
+
+<span class="c-magenta"># your URLs</span>
+https://raw.githubusercontent.com/&lt;you&gt;/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt
+https://raw.githubusercontent.com/&lt;you&gt;/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section cta" id="contribute">
+        <div class="cta-panel reveal">
+          <span class="tag">05 // CONTRIBUTE</span>
+          <h2>Open source. Yours to fork.</h2>
+          <p>
+            Found a false positive? Know a service that should be allowed? Open
+            an issue or send a pull request. The lists get better with every
+            contribution.
+          </p>
+          <div class="hero-actions">
+            <a
+              class="btn btn--primary"
+              href="https://github.com/fabianoflorentino/AdGuard-Home-List"
+              target="_blank"
+              rel="noopener noreferrer"
+              >View repository</a
+            >
+            <a
+              class="btn btn--ghost"
+              href="https://github.com/fabianoflorentino/AdGuard-Home-List/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Report an issue</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <span class="text-green">AdGuard Home List</span> — open source under
+        <a href="./LICENSE.txt" target="_blank" rel="noopener noreferrer"
+          >GPL-3.0</a
+        >. Originally inspired by
+        <a
+          href="https://github.com/Ealenn/AdGuard-Home-List"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Ealenn/AdGuard-Home-List</a
+        >.
+      </p>
+      <p class="footer-meta">
+        <span id="year">2026</span> · Built in the open · Not affiliated with
+        AdGuard.
+      </p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>

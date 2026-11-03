@@ -2,7 +2,10 @@ name: "CLI - NodeJS Tests"
 
 on:
   pull_request:
-    branches: ['*']
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -12,18 +15,17 @@ jobs:
         working-directory: ./modules/cli
 
     steps:
-    - uses: actions/checkout@v5
-      with:
-        path: 'modules/cli'
+      - uses: actions/checkout@v5
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 22
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: modules/cli/package-lock.json
 
-    - name: Install, build, and test
-      run: |
-        cd ./modules/cli
-        npm ci
-        npm run build
-      env:
-        CI: true
+      - name: Install, build, and test
+        run: |
+          npm ci
+          npm run build
+        env:
+          CI: true

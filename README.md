@@ -1,75 +1,120 @@
 # AdGuard Home - List
 
-![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Ealenn/AdGuard-Home-List/gh-pages/badge-allow.json&style=for-the-badge&logo=firefox) 
-![](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Ealenn/AdGuard-Home-List/gh-pages/badge-block.json&style=for-the-badge&logo=AdBlock) 
+[![AllowList](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/badge-allow.json&style=for-the-badge&logo=firefox&label=allowlist)](https://fabianoflorentino.github.io/AdGuard-Home-List/)
+[![BlockList](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/badge-block.json&style=for-the-badge&logo=AdBlock&label=blocklist)](https://fabianoflorentino.github.io/AdGuard-Home-List/)
+[![License](https://img.shields.io/github/license/fabianoflorentino/AdGuard-Home-List?style=for-the-badge)](./LICENSE.txt)
 
-Varied and carefully selected filter lists and consolidates for use in [AdGuard Home](https://ealen.dev/posts/raspberry/dns-sinkhole/). (Updated every day at 4 AM)
+An **open source, community-friendly** collection of carefully curated **allowlist** and **blocklist** rules for [AdGuard Home](https://adguard.com/adguard-home/overview.html). Multiple external sources are downloaded, cleaned, de-duplicated and consolidated into single ready-to-use lists, regenerated **every day at 4 AM UTC**.
 
-- [AdGuard Home - List](#adguard-home---list)
-	- [How to use this project](#how-to-use-this-project)
-	- [Custom List Provider](#custom-list-provider)
-	- [External List Provider](#external-list-provider)
-		- [Contains](#contains)
-			- [Services](#services)
-			- [Community](#community)
-			- [AllowList](#allowlist)
-	- [DNS Providers](#dns-providers)
-	- [Local](#local)
+> Built with a focus on the allowlist: the goal is to keep legitimate services, CDNs, payment providers, game platforms and everyday tools working while still blocking ads, trackers and malicious domains.
 
-## How to use this project
+- Website: <https://fabianoflorentino.github.io/AdGuard-Home-List/>
+- Repository: <https://github.com/fabianoflorentino/AdGuard-Home-List>
+- Issues: <https://github.com/fabianoflorentino/AdGuard-Home-List/issues>
 
-Once you have AdGuard Home ready and are logged in, use its main menu to add one blocklist and one allowlist.
+## Table of contents
+
+- [Quick start](#quick-start)
+- [GitHub Pages](#github-pages)
+- [How it works](#how-it-works)
+- [Repository layout](#repository-layout)
+- [Customizing the lists](#customizing-the-lists)
+- [External list providers](#external-list-providers)
+- [Local development](#local-development)
+- [Fork and deploy your own](#fork-and-deploy-your-own)
+- [Sources](#sources)
+- [Contributing](#contributing)
+- [License and credits](#license-and-credits)
+
+## Quick start
+
+Once you have AdGuard Home ready and are logged in, open **Filters → DNS allowlists** and add:
 
 ```sh
-# BlockList
-https://raw.githubusercontent.com/Ealenn/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt
-
-# AllowList
-https://raw.githubusercontent.com/Ealenn/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt
+# AllowList (recommended)
+https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Allow.txt
 ```
 
-## Custom List Provider
-
-The folders `allowlist/custom/*` and `blocklist/custom/*` contains all custom lists.
-
-## External List Provider
-
-The external providers are configured in files named like this : `{TYPE}.external.{FORMAT}.list`
+A blocklist is also generated if you want to use it:
 
 ```sh
+# BlockList (optional)
+https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/AdGuard-Home-List.Block.txt
+```
+
+Both URLs are stable and updated automatically every day. Point AdGuard Home at the raw URL and it will refresh the list on its own.
+
+## GitHub Pages
+
+The project has a cyberpunk/matrix-themed GitHub Pages site with usage instructions, live list counters and copy-to-clipboard links:
+
+<https://fabianoflorentino.github.io/AdGuard-Home-List/>
+
+The site is generated from the [`site/`](./site) directory and deployed to the `gh-pages` branch together with the generated lists by [`.github/workflows/publish.yml`](./.github/workflows/publish.yml).
+
+## How it works
+
+1. Custom rules from `allowlist/custom` and `blocklist/custom` are loaded.
+2. External lists listed in `*.external.*.list` files are downloaded.
+3. Rules are normalized to AdGuard syntax, filtered and de-duplicated.
+4. The final lists, debug variants and JSON badges are written to `public/`.
+5. The `publish` workflow deploys everything to the `gh-pages` branch.
+
+The source branch is **`main`**. The generated output lives in **`gh-pages`**, which is what GitHub Pages and the raw URLs serve.
+
+## Repository layout
+
+```text
 allowlist/
-├── custom/
-│   ├── *
-|   |   └── *.txt
-│   └── *
-|       └── *.txt
-├── external/
-│   └── allowlist.external.adguard.list
-│   └── allowlist.external.hosts.list
-│   └── allowlist.external.pihole.list
+├── custom/            # Hand-curated allow rules
+│   ├── cdn/
+│   ├── dns/
+│   ├── government/
+│   ├── services/
+│   └── url-shorteners.txt
+├── external/          # URLs of external allow lists (adguard / hosts / pihole)
+└── concat/            # URLs of raw AdGuard rule lists
 
 blocklist/
-├── custom/
-│   ├── *
-|   |   └── *.txt
-│   └── *
-|       └── *.txt
-├── external/
-│   └── blocklist.external.adguard.list
-│   └── blocklist.external.hosts.list
-│   └── blocklist.external.pihole.list
+├── custom/            # Hand-curated block rules
+├── external/          # URLs of external block lists
+└── concat/            # URLs of raw AdGuard rule lists
+
+modules/cli/           # TypeScript CLI that generates the lists
+site/                  # Static GitHub Pages website
+.github/workflows/     # CI: tests + daily publish to gh-pages
 ```
 
-The ***.list** file contains the urls of the external lists to add.
+The external providers are configured in files named `{TYPE}.external.{FORMAT}.list`. Each line is a URL that will be downloaded and combined during the release.
 
-These lists are downloaded, cleaned and combined during a release.
+## Customizing the lists
+
+Add your own domains directly to a file under `allowlist/custom/` or `blocklist/custom/`:
+
+```adblock
+@@||example.com^$important
+```
+
+External sources are added by appending their URL to the matching `*.list` file:
+
+```text
+allowlist/external/allowlist.external.hosts.list
+allowlist/external/allowlist.external.adguard.list
+allowlist/external/allowlist.external.pihole.list
+```
+
+Commit to `main`, and the next scheduled (or manually triggered) workflow run publishes the updated lists.
+
+## External list providers
+
+The `*.list` files contain the URLs of external lists. These lists are downloaded, cleaned and combined during a release.
 
 ### Contains
 
 #### Services
 
 - [AdGuardSDNSFilter/Filters](https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt)
-- [AdguardTeam/cname-trackers](https://github.com/AdguardTeam/cname-trackers) ![GitHub Repo stars](https://img.shields.io/github/stars/AdguardTeam/cname-trackers?style=flat-square)
+- [AdguardTeam/cname-trackers](https://github.com/AdguardTeam/cname-trackers)
 - [Adaway](https://adaway.org)
 - [Yoyo.org](https://pgl.yoyo.org/adservers/)
 - [firebog.net](https://firebog.net)
@@ -78,65 +123,89 @@ These lists are downloaded, cleaned and combined during a release.
 
 #### Community
 
-- [StevenBlack/hosts](https://github.com/StevenBlack/hosts) ![GitHub Repo stars](https://img.shields.io/github/stars/StevenBlack/hosts?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/StevenBlack/hosts?style=flat-square)
-- [crazy-max/WindowsSpyBlocker](https://github.com/crazy-max/WindowsSpyBlocker) ![GitHub Repo stars](https://img.shields.io/github/stars/crazy-max/WindowsSpyBlocker?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/crazy-max/WindowsSpyBlocker?style=flat-square) (Only Spy lists)
-- [blocklistproject/Lists](https://github.com/blocklistproject/Lists) ![GitHub Repo stars](https://img.shields.io/github/stars/blocklistproject/Lists?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/blocklistproject/Lists?style=flat-square)
-- [anudeepND/blacklist](https://github.com/anudeepND/blacklist) ![GitHub Repo stars](https://img.shields.io/github/stars/anudeepND/blacklist?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/anudeepND/blacklist?style=flat-square)
-- [Phishing-Database/Phishing.Database](https://github.com/Phishing-Database/Phishing.Database) ![GitHub Repo stars](https://img.shields.io/github/stars/Phishing-Database/Phishing.Database?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/Phishing-Database/Phishing.Database?style=flat-square)
-- [FadeMind/hosts.extras](https://github.com/FadeMind/hosts.extras) ![GitHub Repo stars](https://img.shields.io/github/stars/FadeMind/hosts.extras?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/FadeMind/hosts.extras?style=flat-square)
-- [Yhonay/antipopads](https://github.com/Yhonay/antipopads) ![GitHub Repo stars](https://img.shields.io/github/stars/Yhonay/antipopads?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/Yhonay/antipopads?style=flat-square)
-- [Spam404/lists](https://github.com/Spam404/lists) ![GitHub Repo stars](https://img.shields.io/github/stars/Spam404/lists?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/Spam404/lists?style=flat-square)
-- [Perflyst/PiHoleBlocklist](https://github.com/Perflyst/PiHoleBlocklist) ![GitHub Repo stars](https://img.shields.io/github/stars/Perflyst/PiHoleBlocklist?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/Perflyst/PiHoleBlocklist?style=flat-square)
-- [Dogino/Discord-Phishing-URLs](https://github.com/Dogino/Discord-Phishing-URLs) ![GitHub Repo stars](https://img.shields.io/github/stars/Dogino/Discord-Phishing-URLs?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/Dogino/Discord-Phishing-URLs?style=flat-square)
+- [StevenBlack/hosts](https://github.com/StevenBlack/hosts)
+- [crazy-max/WindowsSpyBlocker](https://github.com/crazy-max/WindowsSpyBlocker) (Spy lists only)
+- [blocklistproject/Lists](https://github.com/blocklistproject/Lists)
+- [anudeepND/blacklist](https://github.com/anudeepND/blacklist)
+- [Phishing-Database/Phishing.Database](https://github.com/Phishing-Database/Phishing.Database)
+- [FadeMind/hosts.extras](https://github.com/FadeMind/hosts.extras)
+- [Yhonay/antipopads](https://github.com/Yhonay/antipopads)
+- [Spam404/lists](https://github.com/Spam404/lists)
+- [Perflyst/PiHoleBlocklist](https://github.com/Perflyst/PiHoleBlocklist)
+- [Dogino/Discord-Phishing-URLs](https://github.com/Dogino/Discord-Phishing-URLs)
 
 #### AllowList
-- [hl2guide/AdGuard-Home-Whitelist](https://github.com/hl2guide/AdGuard-Home-Whitelist) ![GitHub Repo stars](https://img.shields.io/github/stars/hl2guide/AdGuard-Home-Whitelist?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/hl2guide/AdGuard-Home-Whitelist?style=flat-square) (Only selected lists)
-- [GoodnessJSON/PiHole-Whitelist](https://github.com/GoodnessJSON/PiHole-Whitelist) ![GitHub Repo stars](https://img.shields.io/github/stars/GoodnessJSON/PiHole-Whitelist?style=flat-square) ![GitHub Last Commit](https://img.shields.io/github/last-commit/GoodnessJSON/PiHole-Whitelist?style=flat-square)
 
-## DNS Providers
+- [hl2guide/AdGuard-Home-Whitelist](https://github.com/hl2guide/AdGuard-Home-Whitelist) (Selected lists)
+- [GoodnessJSON/PiHole-Whitelist](https://github.com/GoodnessJSON/PiHole-Whitelist)
+
+## Local development
+
+Requirements: **Node.js 22+**.
 
 ```sh
-# AdGuard
-94.140.14.14
-94.140.15.15
-https://dns.adguard.com/dns-query
-tls://dns.adguard.com
-# Google
-8.8.8.8
-8.8.4.4
-https://dns.google/dns-query
-tls://dns.google
-# Cisco OpenDNS
-208.67.222.222
-208.67.220.220
-https://doh.opendns.com/dns-query
-# Cloudflare DNS
-1.1.1.1
-1.0.0.1
-https://dns.cloudflare.com/dns-query
-tls://1.1.1.1
-# Dyn DNS
-216.146.35.35
-216.146.36.36
+# Build the CLI
+cd modules/cli
+npm ci
+npm run build
+cd ../..
 ```
 
-## Local
+Generate the allowlist and blocklist locally (from the repository root):
 
 ```sh
 node ./modules/cli/dist/main.js generate \
---name AdGuard-Home-List.Allow.txt \
---badge badge-allow.json \
---external ./allowlist/external \
---custom ./allowlist/custom \
---concatExternal ./allowlist/concat \
---convertToAllow true \
---output ./dist
+  --name AdGuard-Home-List.Allow.txt \
+  --badge badge-allow.json \
+  --external ./allowlist/external \
+  --custom ./allowlist/custom \
+  --concatExternal ./allowlist/concat \
+  --convertToAllow true \
+  --output ./dist
 
 node ./modules/cli/dist/main.js generate \
---name AdGuard-Home-List.Block.txt \
---badge badge-block.json \
---external ./blocklist/external \
---custom ./blocklist/custom \
---concatExternal ./blocklist/concat \
---output ./dist
+  --name AdGuard-Home-List.Block.txt \
+  --badge badge-block.json \
+  --external ./blocklist/external \
+  --custom ./blocklist/custom \
+  --concatExternal ./blocklist/concat \
+  --output ./dist
 ```
+
+Preview the website locally (after copying the generated badges into `site/`, if desired):
+
+```sh
+python3 -m http.server 8080 --directory site
+```
+
+Then open <http://localhost:8080>.
+
+## Fork and deploy your own
+
+This project is fully open source, so anyone can run a private or public copy.
+
+1. Fork this repository.
+2. Rename your fork's default branch to `main` (Settings → Branches) if needed.
+3. Enable GitHub Pages: **Settings → Pages → Source: Deploy from a branch → Branch: `gh-pages` / `(root)`**.
+4. Go to **Actions** and run the **Publish** workflow, or push a commit to `main`.
+5. Your lists will be available at:
+
+```text
+https://raw.githubusercontent.com/<your-user>/<your-repo>/gh-pages/AdGuard-Home-List.Allow.txt
+https://raw.githubusercontent.com/<your-user>/<your-repo>/gh-pages/AdGuard-Home-List.Block.txt
+```
+
+The workflow needs `contents: write` permission (already configured) to publish to `gh-pages`.
+
+## Sources
+
+See [External list providers](#external-list-providers) for the full list of upstream projects. All credit for the upstream data belongs to their respective authors.
+
+## Contributing
+
+Contributions are welcome — new allow rules, false-positive fixes, new upstream sources and website improvements. Please open an issue or a pull request. See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+## License and credits
+
+- Licensed under the **GNU General Public License v3.0** — see [LICENSE.txt](./LICENSE.txt).
+- Originally inspired by and forked from [Ealenn/AdGuard-Home-List](https://github.com/Ealenn/AdGuard-Home-List). Thanks to the original author and all upstream list maintainers.

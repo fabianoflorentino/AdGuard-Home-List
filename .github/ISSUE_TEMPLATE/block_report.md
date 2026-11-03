@@ -3,7 +3,7 @@ name: 🚫 Block Report
 about: Add domain on BlockList
 title: "[BLOCK] ?"
 labels: blocklist
-assignees: Ealenn
+assignees: fabianoflorentino
 
 ---
 

@@ -3,13 +3,16 @@ name: Publish
 on:
   push:
     branches:
-      - "master"
+      - "main"
   schedule:
     - cron: '0 4 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v5
@@ -19,10 +22,12 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 22
+        cache: npm
+        cache-dependency-path: modules/cli/package-lock.json
 
     - name: Install & Build
       run: |
-        mkdir public
+        mkdir -p public
         cd ./modules/cli
         npm ci
         npm run build
@@ -59,11 +64,17 @@ jobs:
       env:
         CI: true
 
+    - name: Build GitHub Pages site
+      run: |
+        cp -R ./site/. ./public/
+        cp ./LICENSE.txt ./public/LICENSE.txt
+        touch ./public/.nojekyll
+
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         folder: public
         clean: true
         single-commit: true
-        force: true
+        commit-message: "deploy: publish lists and site"

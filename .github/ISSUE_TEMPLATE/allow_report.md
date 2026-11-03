@@ -3,7 +3,7 @@ name: ✔️ Allow Report
 about: Add domain on AllowList
 title: "[ALLOW] ?"
 labels: allowlist
-assignees: Ealenn
+assignees: fabianoflorentino
 
 ---
 
