@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.webp" alt="AdGuard Home List — open source allowlist and blocklist for AdGuard Home" width="100%" />
+  <img src="site/banner.webp" alt="AdGuard Home List — open source allowlist and blocklist for AdGuard Home" width="100%" />
 </p>
 
 <p align="center">
@@ -7,6 +7,7 @@
   <a href="https://github.com/fabianoflorentino/AdGuard-Home-List/blob/gh-pages/AdGuard-Home-List.Allow.txt"><img alt="AllowList" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/badge-allow.json&style=for-the-badge&logo=firefox&label=allowlist" /></a>
   <a href="https://github.com/fabianoflorentino/AdGuard-Home-List/blob/gh-pages/AdGuard-Home-List.Block.txt"><img alt="BlockList" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/badge-block.json&style=for-the-badge&logo=adblock&label=blocklist" /></a>
   <a href="./LICENSE.txt"><img alt="License" src="https://img.shields.io/github/license/fabianoflorentino/AdGuard-Home-List?style=for-the-badge" /></a>
+  <a href="https://github.com/fabianoflorentino/AdGuard-Home-List/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/fabianoflorentino/AdGuard-Home-List/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/fabianoflorentino/AdGuard-Home-List/issues"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-39ff9a?style=for-the-badge" /></a>
 </p>
 
@@ -35,6 +36,7 @@ rebuilt **every day at 04:00 UTC**.
 - [Local development](#local-development)
 - [Fork and deploy your own](#fork-and-deploy-your-own)
 - [Contributing](#contributing)
+- [Security](#security)
 - [License and credits](#license-and-credits)
 
 ## Quick start
@@ -104,6 +106,8 @@ blocklist/external/   # upstream block lists
 modules/cli/          # TypeScript CLI that builds the lists
 site/                 # static GitHub Pages website
 docs/                 # usage guide and diagrams
+scripts/              # maintenance scripts (upstream link checker)
+.github/              # CI, publishing, security and contribution files
 ```
 
 Want a domain added or removed? Add a rule under `allowlist/custom/` or
@@ -116,11 +120,15 @@ Want a domain added or removed? Add a rule under `allowlist/custom/` or
 1. Custom rules from `allowlist/custom` and `blocklist/custom` are loaded.
 2. External lists listed in `*.external.*.list` files are downloaded.
 3. Rules are normalized to AdGuard syntax, filtered and de-duplicated.
-4. The final lists, debug variants and JSON badges are written to `public/`.
-5. The `publish` workflow deploys everything to the `gh-pages` branch.
+4. The final lists and JSON badges are written to `public/`. Debug variants are
+   optional and only generated with `--debug` (they are never published).
+5. The `publish` workflow deploys the lists and the site to `gh-pages`; a
+   separate workflow deploys site-only changes without touching the lists.
 
 The source branch is **`main`**. The generated output lives in **`gh-pages`**,
-which is what GitHub Pages and the raw URLs serve.
+which is what GitHub Pages and the raw URLs serve. A weekly **Link check**
+workflow probes the upstream URLs, and the CLI reports sources that fail or
+return zero rules.
 
 ## Sources
 
@@ -180,11 +188,11 @@ Open an issue or a pull request. Allow and block requests are welcome.
 Requirements: **Node.js 22+**.
 
 ```sh
-# Build the CLI
 cd modules/cli
 npm ci
-npm run build
-cd ../..
+npm run lint       # ESLint, no auto-fix
+npm run format:check
+npm test           # builds and runs the node:test suite
 ```
 
 Generate the allowlist and blocklist locally (from the repository root):
@@ -207,6 +215,9 @@ node ./modules/cli/dist/main.js generate \
   --concatExternal ./blocklist/concat \
   --output ./dist
 ```
+
+Add `--debug` to any command to also write `debug.<name>` with the origin of each
+rule. Debug files are useful locally but are not published by CI.
 
 Preview the website locally (after copying the generated badges into `site/`, if
 desired):
@@ -246,6 +257,15 @@ sources, documentation and website improvements.
 - Add upstream sources to the matching `*.external.*.list` file.
 - Open an issue for a domain request or bug report.
 - Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request.
+- Code changes must pass `npm run lint`, `npm run format:check` and `npm test`
+  in `modules/cli` (also enforced by the **CI** workflow).
+
+Please follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+## Security
+
+Please do not open public issues for security problems. Use GitHub's private
+vulnerability reporting as described in [SECURITY.md](./SECURITY.md).
 
 ## License and credits
 
