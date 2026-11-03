@@ -9,9 +9,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   cli:
-    name: Lint, format and test
+    name: CLI — lint, format and test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -38,3 +42,21 @@ jobs:
 
       - name: Build and test
         run: npm test
+
+  site:
+    name: Site — JS and HTML validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check JavaScript syntax
+        run: node --check site/script.js
+
+      - name: Validate HTML
+        run: npx --yes html-validate@9 site/index.html site/404.html

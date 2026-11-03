@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: link-check
+  cancel-in-progress: true
+
 jobs:
   links:
     runs-on: ubuntu-latest

@@ -63,6 +63,12 @@ jobs:
             --concatExternal ./blocklist/concat \
             --output ./public
 
+      - name: Validate generated files
+        run: |
+          test -s public/AdGuard-Home-List.Allow.txt
+          test -s public/AdGuard-Home-List.Block.txt
+          node -e "for (const file of ['public/badge-allow.json', 'public/badge-block.json']) JSON.parse(require('fs').readFileSync(file, 'utf8'));"
+
       - name: Add GitHub Pages site
         run: |
           cp -R ./site/. ./public/

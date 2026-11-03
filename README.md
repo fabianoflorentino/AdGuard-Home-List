@@ -126,9 +126,15 @@ Want a domain added or removed? Add a rule under `allowlist/custom/` or
    separate workflow deploys site-only changes without touching the lists.
 
 The source branch is **`main`**. The generated output lives in **`gh-pages`**,
-which is what GitHub Pages and the raw URLs serve. A weekly **Link check**
-workflow probes the upstream URLs, and the CLI reports sources that fail or
-return zero rules.
+which is what GitHub Pages and the raw URLs serve. The CLI also reports sources
+that fail or return zero rules.
+
+| Workflow | Trigger | What it does |
+| --- | --- | --- |
+| **CI** | push/PR on `main` | Lints, checks formatting and runs the CLI test suite; validates the site JS/HTML. |
+| **Publish lists** | list/CLI changes, daily at 04:00 UTC | Regenerates the lists and deploys them with the site to `gh-pages`. |
+| **Deploy site** | `site/**` changes | Deploys only the website, preserving the generated lists. |
+| **Link check** | weekly (Monday) | Probes every upstream list URL and reports dead sources. |
 
 ## Sources
 
