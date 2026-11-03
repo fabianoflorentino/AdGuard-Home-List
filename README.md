@@ -26,7 +26,6 @@ rebuilt **every day at 04:00 UTC**.
 ## Table of contents
 
 - [Quick start](#quick-start)
-- [See it in action](#see-it-in-action)
 - [Why this project](#why-this-project)
 - [Who is it for](#who-is-it-for)
 - [What's inside](#whats-inside)
@@ -58,17 +57,7 @@ https://raw.githubusercontent.com/fabianoflorentino/AdGuard-Home-List/gh-pages/A
 In AdGuard Home: **Filters → DNS allowlists → Add allowlist**, paste the URL,
 save, then click **Check for updates**.
 
-Need screenshots and troubleshooting? Read the full **[usage guide](./docs/USAGE.md)**.
-
-## See it in action
-
-![AdGuard Home List website](docs/screenshots/docs-hero.webp)
-
-![Quickstart section with copy buttons](docs/screenshots/docs-quickstart.webp)
-
-<p align="center">
-  <img src="docs/screenshots/docs-mobile-hero.webp" alt="AdGuard Home List on mobile" width="280" />
-</p>
+Need troubleshooting and a detailed walkthrough? Read the full **[usage guide](./docs/USAGE.md)**.
 
 ## Why this project
 
@@ -114,7 +103,7 @@ allowlist/external/   # upstream allow lists (AdGuard / hosts / Pi-hole)
 blocklist/external/   # upstream block lists
 modules/cli/          # TypeScript CLI that builds the lists
 site/                 # static GitHub Pages website
-docs/                 # usage guide, screenshots and diagrams
+docs/                 # usage guide and diagrams
 ```
 
 Want a domain added or removed? Add a rule under `allowlist/custom/` or

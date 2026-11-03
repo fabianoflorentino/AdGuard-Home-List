@@ -19,8 +19,6 @@ Open the project website:
 In the **Quickstart** section, copy the **AllowList** URL (recommended). The
 **BlockList** is optional.
 
-![Quickstart with copy buttons](screenshots/docs-quickstart.webp)
-
 If you prefer the raw URLs directly:
 
 ```sh
@@ -42,10 +40,7 @@ In AdGuard Home:
 5. Paste the AllowList URL and save.
 6. Click **Check for updates** to load it immediately.
 
-![AdGuard Home DNS allowlists screen](diagrams/adguard-home-allowlist.svg)
-
-The screen above is illustrative; the exact layout depends on your AdGuard Home
-version.
+The exact layout depends on your AdGuard Home version.
 
 ## 3. Optional: add the BlockList
 
