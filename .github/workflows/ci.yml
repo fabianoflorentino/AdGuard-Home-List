@@ -1,6 +1,8 @@
-name: "CLI - NodeJS Tests"
+name: CI
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -8,8 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  cli:
+    name: Lint, format and test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: ./modules/cli
@@ -23,9 +27,14 @@ jobs:
           cache: npm
           cache-dependency-path: modules/cli/package-lock.json
 
-      - name: Install, build, and test
-        run: |
-          npm ci
-          npm run build
-        env:
-          CI: true
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build and test
+        run: npm test
