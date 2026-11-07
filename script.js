@@ -1,0 +1,312 @@
+(() => {
+  "use strict";
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------------------------------------------------------------- *
+   * Matrix rain
+   * ---------------------------------------------------------------- */
+  const canvas = document.getElementById("matrix");
+
+  const saveData = navigator.connection?.saveData === true;
+
+  if (canvas && !reduceMotion.matches && !saveData) {
+    const ctx = canvas.getContext("2d");
+    const glyphs =
+      "アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789ABCDEF<>/\\|=+*#$%&@";
+    const fontSize = 16;
+    const frameMs = 55;
+
+    let width = 0;
+    let height = 0;
+    let columns = 0;
+    let drops = [];
+    let lastFrame = 0;
+    let animationFrame = 0;
+    let running = false;
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      columns = Math.max(1, Math.floor(width / fontSize));
+      drops = Array.from({ length: columns }, () =>
+        Math.floor(Math.random() * (height / fontSize)),
+      );
+    };
+
+    const draw = (time) => {
+      if (time - lastFrame < frameMs) {
+        return;
+      }
+      lastFrame = time;
+
+      ctx.fillStyle = "rgba(4, 7, 6, 0.09)";
+      ctx.fillRect(0, 0, width, height);
+      ctx.font = `${fontSize}px "Share Tech Mono", monospace`;
+
+      for (let i = 0; i < columns; i += 1) {
+        const char = glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillStyle =
+          Math.random() > 0.99
+            ? "rgba(210, 255, 235, 0.85)"
+            : Math.random() > 0.92
+              ? "rgba(138, 157, 151, 0.6)"
+              : "rgba(57, 255, 154, 0.7)";
+
+        ctx.fillText(char, x, y);
+
+        if (y > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        } else {
+          drops[i] += 1;
+        }
+      }
+    };
+
+    const loop = (time) => {
+      if (!running) {
+        return;
+      }
+
+      draw(time);
+      animationFrame = requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (running) {
+        return;
+      }
+
+      running = true;
+      animationFrame = requestAnimationFrame(loop);
+    };
+
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(animationFrame);
+    };
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 150);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    });
+
+    resize();
+    start();
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Live counters from badge JSON
+   * ---------------------------------------------------------------- */
+  const animateNumber = (element, target) => {
+    if (reduceMotion.matches) {
+      element.textContent = new Intl.NumberFormat("en-US").format(target);
+      return;
+    }
+
+    const duration = 1100;
+    const start = performance.now();
+    const formatter = new Intl.NumberFormat("en-US");
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = formatter.format(Math.round(target * eased));
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      }
+    };
+
+    requestAnimationFrame(tick);
+  };
+
+  const loadCounts = async () => {
+    const targets = {
+      allow: document.querySelector('[data-list="allow"]'),
+      block: document.querySelector('[data-list="block"]'),
+    };
+
+    const files = {
+      allow: "badge-allow.json",
+      block: "badge-block.json",
+    };
+
+    await Promise.all(
+      Object.keys(files).map(async (key) => {
+        const element = targets[key];
+        if (!element) return;
+
+        try {
+          const response = await fetch(new URL(files[key], window.location.href), {
+            cache: "no-store",
+          });
+          if (!response.ok) return;
+
+          const data = await response.json();
+          const value = Number(String(data.message || "").replace(/,/g, ""));
+          if (Number.isFinite(value) && value > 0) {
+            animateNumber(element, value);
+          }
+        } catch {
+          /* keep the placeholder when the badge is unavailable */
+        }
+      }),
+    );
+  };
+
+  loadCounts();
+
+  /* ---------------------------------------------------------------- *
+   * Copy to clipboard
+   * ---------------------------------------------------------------- */
+  const toast = document.getElementById("toast");
+  let toastTimer;
+
+  const showToast = (message) => {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("is-visible");
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+    }, 2200);
+  };
+
+  const fallbackCopy = (text) => {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch {
+      ok = false;
+    }
+
+    document.body.removeChild(area);
+    return ok;
+  };
+
+  document.querySelectorAll("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const value = button.getAttribute("data-copy") || "";
+      let copied = false;
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(value);
+          copied = true;
+        }
+      } catch {
+        copied = false;
+      }
+
+      if (!copied) {
+        copied = fallbackCopy(value);
+      }
+
+      if (copied) {
+        const original = button.textContent;
+        button.textContent = "Copied";
+        button.classList.add("is-copied");
+        showToast("URL copied to clipboard");
+        window.setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("is-copied");
+        }, 1800);
+      } else {
+        showToast("Press Ctrl+C to copy");
+      }
+    });
+  });
+
+  /* ---------------------------------------------------------------- *
+   * Scroll reveal
+   * ---------------------------------------------------------------- */
+  const revealItems = document.querySelectorAll(".reveal");
+
+  if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Fixed header height (keeps content offset in sync)
+   * ---------------------------------------------------------------- */
+  const header = document.querySelector(".site-header");
+
+  if (header) {
+    const setHeaderHeight = () => {
+      document.documentElement.style.setProperty(
+        "--header-height",
+        `${header.offsetHeight}px`,
+      );
+    };
+
+    setHeaderHeight();
+    window.addEventListener("resize", setHeaderHeight);
+
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(setHeaderHeight).observe(header);
+    }
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Back to top
+   * ---------------------------------------------------------------- */
+  const toTop = document.getElementById("to-top");
+
+  if (toTop) {
+    const updateToTop = () => {
+      toTop.classList.toggle("is-visible", window.scrollY > 480);
+    };
+
+    updateToTop();
+    window.addEventListener("scroll", updateToTop, { passive: true });
+
+    toTop.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------------- *
+   * Footer year
+   * ---------------------------------------------------------------- */
+  const year = document.getElementById("year");
+  if (year) {
+    year.textContent = String(new Date().getFullYear());
+  }
+})();
