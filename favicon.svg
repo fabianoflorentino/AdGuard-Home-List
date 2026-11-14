@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AdGuard Home List">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#05070a" />
+  <rect x="2" y="2" width="60" height="60" rx="11" fill="none" stroke="#00ff9c" stroke-opacity="0.25" />
+  <g fill="none" stroke="#00ff9c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+    <path d="M32 8l18 7v14c0 11-7.5 19-18 23-10.5-4-18-12-18-23V15l18-7z" />
+    <path d="M23 29l6 6-6 6" />
+    <path d="M33 41h9" />
+  </g>
+</svg>
